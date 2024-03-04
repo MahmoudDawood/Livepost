@@ -20,7 +20,7 @@ class UserSeeder extends Seeder
     {
         $this->disableForeignKeyChecks();
         $this->truncate('users');
-        $this->disableForeignKeyChecks();
         User::factory(10)->create();
+        $this->enableForeignKeyChecks();
     }
 }
