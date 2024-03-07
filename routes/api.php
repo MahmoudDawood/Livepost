@@ -19,6 +19,8 @@ Route::prefix("v1")
     // Move routes to a v1 directory when new versions come
     ->group( function () {
     require __DIR__ . '/api/user.php';
+    require __DIR__ . '/api/post.php';
+    require __DIR__ . '/api/comment.php';
 });
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
