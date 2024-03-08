@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
+use App\Helpers\Routes\RouteHelper;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,12 +15,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::prefix("v1")
+Route::prefix('v1')
     // Move routes to a v1 directory when new versions come
-    ->group( function () {
-    require __DIR__ . '/api/user.php';
-    require __DIR__ . '/api/post.php';
-    require __DIR__ . '/api/comment.php';
+    ->group(function () {
+        RouteHelper::importRouteFiles(__DIR__ . '/api');
 });
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
