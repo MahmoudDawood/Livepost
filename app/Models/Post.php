@@ -9,8 +9,17 @@ class Post extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'title',
+        'body'
+    ];
+
     protected $casts = [
         'body' => 'array'
+    ];
+
+    protected $appends = [
+        'title_upper_case'
     ];
     
     public function getTitleUpperCaseAttribute() {
