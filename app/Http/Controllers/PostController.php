@@ -95,7 +95,7 @@ class PostController extends Controller
         }
 
         return new JsonResponse([
-            "data" => "deleted"
+            "data" => "Deleted"
         ]);
     }
 }
