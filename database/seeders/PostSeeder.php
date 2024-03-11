@@ -23,9 +23,9 @@ class PostSeeder extends Seeder
     {
         $this->disableForeignKeyChecks();
         $this->truncate('posts');
-        $posts = Post::factory(3)
+        $posts = Post::factory(200)
             // ->has(Comment::factory(3), 'comments')
-            ->untitled()
+            // ->untitled()
             ->create();
 
         // Apply many to many relation to users
