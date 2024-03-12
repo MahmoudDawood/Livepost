@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use App\Http\Resources\PostResource;
+use App\Repositories\PostRepository;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class PostController extends Controller
@@ -31,18 +32,12 @@ class PostController extends Controller
      * @param  \Illuminate\Http\Request $request
      * @return PostResource
      */
-    public function store(Request $request)
+    public function store(Request $request, PostRepository $postRepository)
     {
-        $post = DB::transaction(function() use($request) {
-
-            $post = Post::query()->create([
-                'title' => $request->title,
-                'body' => $request->body,
-            ]);
-
-            $post->users()->sync($request->user_ids);
-            return $post;
-        });
+        $post = $postRepository->create($request->only([
+            'title',
+            'body'
+        ]));
 
         return new PostResource($post);
     }
@@ -65,19 +60,12 @@ class PostController extends Controller
      * @param  \App\Models\Post $post
      * @return PostResource | JsonResponse
      */
-    public function update(Request $request, Post $post)
+    public function update(Request $request, Post $post, PostRepository $postRepository)
     {
-        // $updated = $post->update($request->only(['title', 'body']));
-        $updated = $post->update([
-            'title' => $request->title ?? $post->title,
-            'body' => $request->body ?? $post->body,
-        ]);
-
-        if(!$updated) {
-            return new JsonResponse([
-                'error' => 'Failed to update resource'
-            ], 400);
-        }
+        $post = $postRepository->update($post, $request->only([
+            'title',
+            'body'
+        ]));
 
         return new PostResource($post);
     }
@@ -88,15 +76,9 @@ class PostController extends Controller
      * @param  \App\Models\Post  $post
      * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy(Post $post)
+    public function destroy(Post $post, PostRepository $postRepository)
     {
-        $deleted = $post->forceDelete();
-        
-        if(!$deleted) {
-            return new JsonResponse([
-                'errors' => 'Failed to delete resource'
-            ], 400);
-        }
+        $post = $postRepository->forceDelete($post);
 
         return new JsonResponse([
             "data" => "Deleted"
