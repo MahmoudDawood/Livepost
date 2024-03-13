@@ -32,7 +32,7 @@ class PostRepository extends BaseRepository {
         ]);
 
         if(!$updated) {
-            return new \Exception('Failed to update post');
+            throw new \Exception('Failed to update post');
         }
 
         return $post;
@@ -47,7 +47,7 @@ class PostRepository extends BaseRepository {
         $deleted = $post->forceDelete();
         
         if(!$deleted) {
-            return new \Exception('Failed to delete post');
+            throw new \Exception('Failed to delete post');
         }
 
         return $deleted;

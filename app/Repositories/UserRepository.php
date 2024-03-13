@@ -3,7 +3,6 @@
 namespace App\Repositories;
 
 use App\Models\User;
-use BaseRepository;
 
 class UserRepository extends BaseRepository {
     public function create(array $attributes) {
@@ -43,7 +42,7 @@ class UserRepository extends BaseRepository {
         $deleted = $user->forceDelete();
 
         if(!$deleted) {
-            return new \Exception('Failed to delete user');
+            throw new \Exception('Failed to delete user');
         }
     
         return $deleted;
