@@ -76,7 +76,7 @@ class CommentController extends Controller
      */
     public function destroy(Comment $comment, CommentRepository $commentRepository)
     {
-        $comment = $commentRepository->forceDelete($comment);
+        $commentRepository->forceDelete($comment);
         
         return new JsonResponse([
             'data' => 'Deleted'

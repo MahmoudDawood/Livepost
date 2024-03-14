@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\GeneralJsonException;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\DB;
 use App\Http\Resources\PostResource;
 use App\Repositories\PostRepository;
 use Illuminate\Http\Resources\Json\ResourceCollection;
@@ -78,7 +78,7 @@ class PostController extends Controller
      */
     public function destroy(Post $post, PostRepository $postRepository)
     {
-        $post = $postRepository->forceDelete($post);
+        $postRepository->forceDelete($post);
 
         return new JsonResponse([
             "data" => "Deleted"

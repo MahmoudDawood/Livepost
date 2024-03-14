@@ -2,19 +2,26 @@
 
 namespace App\Repositories;
 
+use App\Exceptions\GeneralJsonException;
 use App\Models\Post;
 use Illuminate\Support\Facades\DB;
 
 class PostRepository extends BaseRepository {
     public function create(array $attributes) {
         $post = DB::transaction(function() use($attributes) {
-            $post = Post::query()->create([
+            $newPost = Post::query()->create([
                 'title' => data_get($attributes, 'title', 'Untitled'),
                 'body' => data_get($attributes, 'body'),
             ]);
 
-            $post->users()->sync(data_get($attributes, 'user_ids'));
-            return $post;
+            throw_if(!$newPost, new GeneralJsonException('Failed to create post'));
+
+            $userIds = data_get($attributes, 'user_ids');
+            if($userIds) {
+                $newPost->users()->sync($userIds);
+            }
+
+            return $newPost;
         });
 
         return $post;
@@ -31,9 +38,7 @@ class PostRepository extends BaseRepository {
             'body' => data_get($attributes, 'body') ?? $post->body,
         ]);
 
-        if(!$updated) {
-            throw new \Exception('Failed to update post');
-        }
+        throw_if(!$updated, new GeneralJsonException('Failed to update post'));
 
         return $post;
     }
@@ -43,13 +48,8 @@ class PostRepository extends BaseRepository {
      * @return mixed
      */
     public function forceDelete($post) {
-
         $deleted = $post->forceDelete();
         
-        if(!$deleted) {
-            throw new \Exception('Failed to delete post');
-        }
-
-        return $deleted;
+        throw_if(!$deleted, new GeneralJsonException('Failed to delete post'));
     }
 }

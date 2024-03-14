@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Comment;
+use App\Exceptions\GeneralJsonException;
 
 class CommentRepository extends BaseRepository {
     public function create(array $attributes) {
@@ -12,6 +13,8 @@ class CommentRepository extends BaseRepository {
             'post_id' => data_get($attributes, 'post_id'),
         ]);
 
+        throw_if(!$comment, new GeneralJsonException('Failed to create comment'));
+
         return $comment;
     }
 
@@ -20,9 +23,7 @@ class CommentRepository extends BaseRepository {
             'body' => data_get($attributes, 'body') ?? $comment->body,
         ]);
 
-        if(!$updated) {
-            throw new \Exception('Failed to update comment');
-        }
+        throw_if(!$updated, new GeneralJsonException('Failed to update comment'));
 
         return $comment;
     }
@@ -30,10 +31,6 @@ class CommentRepository extends BaseRepository {
     public function forceDelete($comment) {
         $deleted = $comment->forceDelete();
 
-        if(!$deleted) {
-            throw new \Exception('Failed to delete comment');
-        }
-
-        return $comment;
+        throw_if(!$deleted, new GeneralJsonException('Failed to delete comment'));
     }
 }

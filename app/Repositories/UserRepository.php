@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\User;
+use App\Exceptions\GeneralJsonException;
 
 class UserRepository extends BaseRepository {
     public function create(array $attributes) {
@@ -11,6 +12,8 @@ class UserRepository extends BaseRepository {
             'email' => data_get($attributes, 'email'),
             'password' => data_get($attributes, 'password'),
         ]);
+ 
+        throw_if(!$user, new GeneralJsonException('Failed to create user'));
 
         return $user;
     }
@@ -27,9 +30,7 @@ class UserRepository extends BaseRepository {
             'password' => data_get($attributes, 'password') ?? $user->password,
         ]);
 
-        if(!$updated) {
-            throw new \Exception('Failed to updated user');
-        }
+        throw_if(!$updated, new GeneralJsonException('Failed to update user'));
 
         return $user;
     }
@@ -41,11 +42,7 @@ class UserRepository extends BaseRepository {
     public function forceDelete($user) {
         $deleted = $user->forceDelete();
 
-        if(!$deleted) {
-            throw new \Exception('Failed to delete user');
-        }
-    
-        return $deleted;
+        throw_if(!$deleted, new GeneralJsonException('Failed to delete user'));
     }
 
 }
