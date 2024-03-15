@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\Models\User\UserCreated;
 use App\Models\User;
 use App\Repositories\UserRepository;
 use Illuminate\Http\Request;
