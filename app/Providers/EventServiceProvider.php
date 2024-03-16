@@ -2,8 +2,6 @@
 
 namespace App\Providers;
 
-use App\Events\UserCreated;
-use App\Listeners\SendWelcomeEmail;
 use App\Subscribers\Models\UserSubscriber;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;

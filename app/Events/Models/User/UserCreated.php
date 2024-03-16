@@ -15,7 +15,7 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 class UserCreated
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
-    protected $user;
+    public $user;
 
     /**
      * Create a new event instance.
