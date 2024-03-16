@@ -2,9 +2,12 @@
 
 namespace App\Repositories;
 
-use App\Exceptions\GeneralJsonException;
 use App\Models\Post;
 use Illuminate\Support\Facades\DB;
+use App\Events\Models\Post\PostCreated;
+use App\Events\Models\Post\PostDeleted;
+use App\Events\Models\Post\PostUpdated;
+use App\Exceptions\GeneralJsonException;
 
 class PostRepository extends BaseRepository {
     public function create(array $attributes) {
@@ -15,6 +18,7 @@ class PostRepository extends BaseRepository {
             ]);
 
             throw_if(!$newPost, new GeneralJsonException('Failed to create post'));
+            event(new PostCreated($newPost));
 
             $userIds = data_get($attributes, 'user_ids');
             if($userIds) {
@@ -39,6 +43,7 @@ class PostRepository extends BaseRepository {
         ]);
 
         throw_if(!$updated, new GeneralJsonException('Failed to update post'));
+        event(new PostUpdated($post));
 
         return $post;
     }
@@ -51,5 +56,6 @@ class PostRepository extends BaseRepository {
         $deleted = $post->forceDelete();
         
         throw_if(!$deleted, new GeneralJsonException('Failed to delete post'));
+        event(new PostDeleted($post));
     }
 }
