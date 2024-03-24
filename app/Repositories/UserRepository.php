@@ -7,13 +7,14 @@ use App\Events\Models\User\UserUpdated;
 use App\Events\Models\User\UserCreated;
 use App\Events\Models\User\UserDeleted;
 use App\Exceptions\GeneralJsonException;
+use Illuminate\Support\Facades\Hash;
 
 class UserRepository extends BaseRepository {
     public function create(array $attributes) {
         $user = User::query()->create([
             'name' => data_get($attributes, 'name'),
             'email' => data_get($attributes, 'email'),
-            'password' => data_get($attributes, 'password'),
+            'password' => password_hash(data_get($attributes, 'password'), PASSWORD_DEFAULT),
         ]);
  
         throw_if(!$user, new GeneralJsonException('Failed to create user'));
@@ -31,7 +32,7 @@ class UserRepository extends BaseRepository {
         $updated = $user->update([
             'name' => data_get($attributes, 'name') ?? $user->name,
             'email' => data_get($attributes, 'email') ?? $user->email,
-            'password' => data_get($attributes, 'password') ?? $user->password,
+            'password' => Hash::make(data_get($attributes, 'password')),
         ]);
 
         throw_if(!$updated, new GeneralJsonException('Failed to update user'));
