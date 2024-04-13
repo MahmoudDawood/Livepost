@@ -43,14 +43,14 @@ class CommentRepositoryTest extends TestCase
 
         // Source of truth
         $payload = [
-            'body' => 'new comment body',
+            'body' => ['new comment body'],
         ];
 
         // Compare results
         $updated = $repository->update($comment, $payload);
 
         $this->assertSame($payload['body'], $updated->body, 'Updated comment body is not matching');
-   }
+    }
 
     public function test_delete() {
         // Replicate env
