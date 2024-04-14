@@ -9,7 +9,7 @@ class FactoryHelper {
 
         // Generate a random number between 1 & records count
         if($modelCount === 0) {
-            return $model::factory(1)->create()->id;
+            return $model::factory(1)->create()->first()->id;
         } else {
             return rand(1, $modelCount);
         }
